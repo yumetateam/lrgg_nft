@@ -4700,7 +4700,7 @@ abstract contract ReentrancyGuard {
 // File: contracts/GenesisGodNFT.sol
 
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 
 
@@ -4719,7 +4719,11 @@ contract GenesisGodNFT is ERC721, ERC721Enumerable, AccessControl, ERC721Royalty
     using SafeERC20 for IERC20;
     using Strings for uint256;
 
-    uint256 public immutable maxSupply;
+    uint256 public constant MAX_SUPPLY      = 300;
+    uint96 public constant DEFAULT_ROYALTY  = 1000; // 500 = 5%
+    uint256 public constant MIN_TOKEN_ID    = 100001; 
+    uint256 public constant MAX_TOKEN_ID    = MIN_TOKEN_ID + MAX_SUPPLY; 
+    
     bool public isLocked;
     string public baseTokenURI;
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
@@ -4731,29 +4735,9 @@ contract GenesisGodNFT is ERC721, ERC721Enumerable, AccessControl, ERC721Royalty
 
     /**
      * @notice Constructor
-     * @param name NFT collection name
-     * @param symbol NFT symbol
-     * @param maxSupplyInput Maximum number of NFTs that can be minted
-     * @param royaltyReceiver Address to receive royalties
-     * @param royaltyFeeNumerator Royalty fee in basis points (e.g., 500 = 5%)
      */
-    constructor(
-        string memory name,
-        string memory symbol,
-        uint256 maxSupplyInput,
-        address royaltyReceiver,
-        uint96 royaltyFeeNumerator
-    ) ERC721(name, symbol) {
-        require(
-            (maxSupplyInput == 100) ||
-            (maxSupplyInput == 300) ||
-            (maxSupplyInput == 1000) ||
-            (maxSupplyInput == 10000),
-            "GenesisGod: Invalid max supply"
-        );
-        maxSupply = maxSupplyInput;
-        _setDefaultRoyalty(royaltyReceiver, royaltyFeeNumerator);
-
+    constructor() ERC721("LoveRose Genesis God", "LRGG") {
+        _setDefaultRoyalty(msg.sender, DEFAULT_ROYALTY);
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(ADMIN_ROLE, msg.sender);
         _grantRole(MINTER_ROLE, msg.sender);
@@ -4777,8 +4761,8 @@ contract GenesisGodNFT is ERC721, ERC721Enumerable, AccessControl, ERC721Royalty
      */
     function mint(address recipient, uint256 tokenId) external onlyRole(MINTER_ROLE) {
         require(recipient != address(0), "GenesisGod: Invalid recipient");
-        require(totalSupply() < maxSupply, "GenesisGod: Max supply reached");
-        require(tokenId < maxSupply, "GenesisGod: Token ID out of range");
+        require(totalSupply() < MAX_SUPPLY, "GenesisGod: Max supply reached");
+        require(tokenId >= MIN_TOKEN_ID && tokenId <= MAX_TOKEN_ID, "GenesisGod: Token ID out of range");
         require(_ownerOf(tokenId) == address(0), "GenesisGod: Token already minted");
         _mint(recipient, tokenId);
     }
@@ -4791,8 +4775,8 @@ contract GenesisGodNFT is ERC721, ERC721Enumerable, AccessControl, ERC721Royalty
      */
     function safeMint(address recipient, uint256 tokenId) external onlyRole(MINTER_ROLE)  {
         require(recipient != address(0), "GenesisGod: Invalid recipient");
-        require(totalSupply() < maxSupply, "GenesisGod: Max supply reached");
-        require(tokenId < maxSupply, "GenesisGod: Token ID out of range");
+        require(totalSupply() < MAX_SUPPLY, "GenesisGod: Max supply reached");
+        require(tokenId >= MIN_TOKEN_ID && tokenId <= MAX_TOKEN_ID, "GenesisGod: Token ID out of range");
         require(_ownerOf(tokenId) == address(0), "GenesisGod: Token already minted");
         _safeMint(recipient, tokenId);
     }
