@@ -1,6 +1,9 @@
 # Remix compiler artifacts
 **/artifacts/
 **/artifacts/**
+.DS_Store
+node_modules/
+package-lock.json
 
 # Remix plugin state folders
 deps/
