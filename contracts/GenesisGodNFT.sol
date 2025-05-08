@@ -21,8 +21,8 @@ contract GenesisGodNFT is ERC721, ERC721Enumerable, AccessControl, ERC721Royalty
 
     uint256 public constant MAX_SUPPLY      = 300;
     uint96 public constant DEFAULT_ROYALTY  = 500; // 500 = 5%
-    uint256 public constant MIN_TOKEN_ID  = 100001; 
-    uint256 public constant MAX_TOKEN_ID  = 999999; 
+    uint256 public constant MIN_TOKEN_ID    = 100001; 
+    uint256 public constant MAX_TOKEN_ID    = MIN_TOKEN_ID + MAX_SUPPLY; 
     
     bool public isLocked;
     string public baseTokenURI;
