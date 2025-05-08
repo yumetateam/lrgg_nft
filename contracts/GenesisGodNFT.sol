@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -21,6 +21,8 @@ contract GenesisGodNFT is ERC721, ERC721Enumerable, AccessControl, ERC721Royalty
 
     uint256 public constant MAX_SUPPLY      = 300;
     uint96 public constant DEFAULT_ROYALTY  = 500; // 500 = 5%
+    uint256 public constant MIN_TOKEN_ID  = 100001; 
+    uint256 public constant MAX_TOKEN_ID  = 999999; 
     
     bool public isLocked;
     string public baseTokenURI;
@@ -60,7 +62,7 @@ contract GenesisGodNFT is ERC721, ERC721Enumerable, AccessControl, ERC721Royalty
     function mint(address recipient, uint256 tokenId) external onlyRole(MINTER_ROLE) {
         require(recipient != address(0), "GenesisGod: Invalid recipient");
         require(totalSupply() < MAX_SUPPLY, "GenesisGod: Max supply reached");
-        require(tokenId < MAX_SUPPLY, "GenesisGod: Token ID out of range");
+        require(tokenId >= MIN_TOKEN_ID && tokenId <= MAX_TOKEN_ID, "GenesisGod: Token ID out of range");
         require(_ownerOf(tokenId) == address(0), "GenesisGod: Token already minted");
         _mint(recipient, tokenId);
     }
@@ -74,7 +76,7 @@ contract GenesisGodNFT is ERC721, ERC721Enumerable, AccessControl, ERC721Royalty
     function safeMint(address recipient, uint256 tokenId) external onlyRole(MINTER_ROLE)  {
         require(recipient != address(0), "GenesisGod: Invalid recipient");
         require(totalSupply() < MAX_SUPPLY, "GenesisGod: Max supply reached");
-        require(tokenId < MAX_SUPPLY, "GenesisGod: Token ID out of range");
+        require(tokenId >= MIN_TOKEN_ID && tokenId <= MAX_TOKEN_ID, "GenesisGod: Token ID out of range");
         require(_ownerOf(tokenId) == address(0), "GenesisGod: Token already minted");
         _safeMint(recipient, tokenId);
     }

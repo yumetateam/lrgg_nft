@@ -1,49 +1,59 @@
-// SPDX-License-Identifier: GPL-3.0
-        
-pragma solidity >=0.4.22 <0.9.0;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
 
-// This import is automatically injected by Remix
-import "remix_tests.sol"; 
-
-// This import is required to use custom transaction context
-// Although it may fail compilation in 'Solidity Compiler' plugin
-// But it will work fine in 'Solidity Unit Testing' plugin
-import "remix_accounts.sol";
 import "../contracts/GenesisGodNFT.sol";
 
-// File name has to end with '_test.sol', this file can contain more than one testSuite contracts
-contract testSuite {
+contract GenesisGodNFTTest {
+    GenesisGodNFT public nft;
 
-    /// 'beforeAll' runs before all other tests
-    /// More special functions are: 'beforeEach', 'beforeAll', 'afterEach' & 'afterAll'
-    function beforeAll() public {
-        // <instantiate contract>
-        Assert.equal(uint(1), uint(1), "1 should be equal to 1");
+    constructor() {
+        // 部署测试合约时同时部署 GenesisGodNFT
+        nft = new GenesisGodNFT();
+
+        // 设定基础 URI
+        nft.setBaseTokenURI("https://example.com/metadata/");
+
+        // 默认部署者有 ADMIN_ROLE 和 MINTER_ROLE，无需再次授权
     }
 
-    function checkSuccess() public {
-        // Use 'Assert' methods: https://remix-ide.readthedocs.io/en/latest/assert_library.html
-        Assert.ok(2 == 2, 'should be true');
-        Assert.greaterThan(uint(2), uint(1), "2 should be greater than to 1");
-        Assert.lesserThan(uint(2), uint(3), "2 should be lesser than to 3");
+    function testMint() public {
+        // mint 第一个 token 给调用者
+        nft.mint(msg.sender, 100001);
     }
 
-    function checkSuccess2() public pure returns (bool) {
-        // Use the return value (true or false) to test the contract
-        return true;
-    }
-    
-    function checkFailure() public {
-        Assert.notEqual(uint(1), uint(1), "1 should not be equal to 1");
+    function testSafeMint() public {
+        nft.safeMint(msg.sender, 100002);
     }
 
-    /// Custom Transaction Context: https://remix-ide.readthedocs.io/en/latest/unittesting.html#customization
-    /// #sender: account-1
-    /// #value: 100
-    function checkSenderAndValue() public payable {
-        // account index varies 0-9, value is in wei
-        Assert.equal(msg.sender, TestsAccounts.getAccount(1), "Invalid sender");
-        Assert.equal(msg.value, 100, "Invalid value");
+    function testSetURI(string memory newUri) public {
+        nft.setBaseTokenURI(newUri);
+    }
+
+    function testGrantMinter(address account) public {
+        nft.grantMinter(account);
+    }
+
+    function testRevokeMinter(address account) public {
+        nft.revokeMinter(account);
+    }
+
+    function testLockContract() public {
+        nft.lockContract();
+    }
+
+    function getTokenURI(uint256 tokenId) public view returns (string memory) {
+        return nft.tokenURI(tokenId);
+    }
+
+    function getOwnedTokens(address owner, uint256 cursor, uint256 size)
+        public
+        view
+        returns (uint256[] memory, uint256)
+    {
+        return nft.tokensOfOwnerBySize(owner, cursor, size);
+    }
+
+    function getSupply() public view returns (uint256) {
+        return nft.totalSupply();
     }
 }
-    
