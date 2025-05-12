@@ -1,7 +1,11 @@
 {
   "name": "Genesis God #1171",
   "description": "LoveRose · Emotional Universe Genesis God NFT - Black Gold Card Supreme",
-  "image": "https://rose.love/nft/nft.png",
+  "image": "https://stg.rose.love/nft/nft.png",
+  "external_url": "https://rose.love",
+  "animation_url": "",
+  "youtube_url": "",
+  "background_color": "#",
   "attributes": [
     {
       "trait_type": "Frame",

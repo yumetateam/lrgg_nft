@@ -6,7 +6,7 @@ output_dir = os.path.join(os.path.dirname(__file__), '../assets/metadata')
 os.makedirs(output_dir, exist_ok=True)  # Create the directory if it doesn't exist
 
 # Base image URL for each NFT
-base_image_url = 'https://rose.love/nft/'
+base_image_url = 'https://stg.rose.love/nft/'
 
 # Generate metadata for token IDs from 1001 to 1300
 for token_id in range(1001, 1301):
@@ -14,6 +14,10 @@ for token_id in range(1001, 1301):
         "name": f"Genesis God #{token_id}",
         "description": "LoveRose · Emotional Universe Genesis God NFT - Black Gold Card Supreme",
         "image": f"{base_image_url}nft.png",
+        "external_url": "https://rose.love",
+        "animation_url":"",
+        "youtube_url":"",
+        "background_color": "#",
         "attributes": [
           { "trait_type": "Frame", "value": "Gold Emboss" },
           { "trait_type": "Portrait", "value": "Actress A" },
