@@ -22,13 +22,13 @@ contract GenesisGodNFT is ERC721, ERC721Enumerable, AccessControl, ERC721Royalty
     uint256 public constant MAX_SUPPLY = 300; // ✅ Maximum number of NFTs that can be minted
     uint96 public constant DEFAULT_ROYALTY = 1000; // ✅ Default royalty fee (1000 = 10%)
     uint256 public constant MIN_TOKEN_ID = 1001; // ✅ Token IDs start from 1001
-    uint256 public constant MINT_PRICE = 1000_000 * 1e18; // ✅ Mint price per token in USDT/USDC
+    uint256 public constant MINT_PRICE = 100_000 * 1e18; // ✅ Mint price per token in USDT/USDC
     uint256 private _nextTokenId = MIN_TOKEN_ID;
 
     mapping(address => bool) public allowedTokens;
 
     bool public isLocked; // ✅ Indicates whether contract settings are locked
-    string public baseTokenURI = "ipfs://QmZST1r4M51DwwK6RSDJo23w8uJWFqRskaWEMEnu7VUDst/"; // ✅ Base URI for token metadata
+    string public baseTokenURI = "ipfs://QmatKvCuwvbq6NdtsVwnri2gmi9f99CV52nNvzoiU7LFqn/"; // ✅ Base URI for token metadata
 
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE"); // ✅ Role allowed to manage admin-only actions
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE"); // ✅ Role allowed to mint NFTs
