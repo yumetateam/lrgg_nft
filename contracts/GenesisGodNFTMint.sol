@@ -28,7 +28,7 @@ contract GenesisGodNFT is ERC721, ERC721Enumerable, AccessControl, ERC721Royalty
     mapping(address => bool) public allowedTokens;
 
     bool public isLocked; // ✅ Indicates whether contract settings are locked
-    string public baseTokenURI = "ipfs://QmatKvCuwvbq6NdtsVwnri2gmi9f99CV52nNvzoiU7LFqn/"; // ✅ Base URI for token metadata
+    string public baseTokenURI = "ipfs://QmU63czsL944gxH5ME4wFCgYGPDsYrg7rBaGpn6BNWceNK/"; // ✅ Base URI for token metadata
 
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE"); // ✅ Role allowed to manage admin-only actions
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE"); // ✅ Role allowed to mint NFTs
