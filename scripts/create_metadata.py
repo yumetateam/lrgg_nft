@@ -2,11 +2,11 @@ import os
 import json
 
 # Define the output directory: ../metadata relative to this script
-output_dir = os.path.join(os.path.dirname(__file__), '../assets/metadata')
+output_dir = os.path.join(os.path.dirname(__file__), '../metadata')
 os.makedirs(output_dir, exist_ok=True)  # Create the directory if it doesn't exist
 
 # Base image URL for each NFT
-base_image_url = 'https://stg.rose.love/nft/'
+base_image_url = 'ipfs://QmbEkMKjKE5A2CDWNDjy5DKD8p4GgXqCdyufrtJyz2x9Ub/'
 
 # Generate metadata for token IDs from 1001 to 1300
 for token_id in range(1001, 1301):
