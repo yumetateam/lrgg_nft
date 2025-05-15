@@ -6,11 +6,13 @@
 ---
 
 ## Constants
-| Name           | Value          | Description                            |
-|----------------|----------------|------------------------------------|
-| MAX_SUPPLY     | 300            | Maximum number of NFTs minted       |
-| DEFAULT_ROYALTY| 1000 (10%)     | Default royalty fee in basis points |
-| MIN_TOKEN_ID   | 1001           | Starting token ID                   |
+| Name           | Value               | Description                            |
+|----------------|---------------------|------------------------------------|
+| MAX_SUPPLY     | 300                 | Maximum number of NFTs minted       |
+| DEFAULT_ROYALTY| 1000 (10%)          | Default royalty fee in basis points |
+| MIN_TOKEN_ID   | 1001                | Starting token ID                   |
+| TOKEN_SYMBOL   | LRGG                |                                     |
+| TOKEN_NAME     | LoveRose Genesis God|                                     |
 
 ---
 

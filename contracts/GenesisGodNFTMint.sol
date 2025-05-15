@@ -19,9 +19,12 @@ contract GenesisGodNFT is ERC721A, AccessControl, ERC2981, ReentrancyGuard {
     using SafeERC20 for IERC20;
     using Strings for uint256;
 
-    uint256 public constant MAX_SUPPLY = 300; // Maximum number of NFTs that can be minted
-    uint96 public constant DEFAULT_ROYALTY = 1000; // Default royalty fee (in basis points, 1000 = 10%)
-    uint256 public constant MIN_TOKEN_ID = 1001; // Token IDs start from 1001
+    uint256 constant MAX_SUPPLY = 300; // Maximum number of NFTs that can be minted
+    uint96 constant DEFAULT_ROYALTY = 1000; // Default royalty fee (in basis points, 1000 = 10%)
+    uint256 constant MIN_TOKEN_ID = 1001; // Token IDs start from 1001
+    string constant TOKEN_SYMBOL = "LRGG"; // Token symbol
+    string constant TOKEN_NAME = "LoveRose Genesis God"; // Token name
+
     uint256 public mintPrice = 100_000; // Mint price per token in USDT/USDC
     uint256 public maxMintPerTxn = 300; // Maximum NFTs allowed to mint per transaction
 
@@ -58,7 +61,7 @@ contract GenesisGodNFT is ERC721A, AccessControl, ERC2981, ReentrancyGuard {
      * @notice Contract constructor
      * @param _tokens Array of ERC20 token addresses allowed for minting
      */
-    constructor(address[] memory _tokens) ERC721A("LoveRose Genesis God", "LRGG") {
+    constructor(address[] memory _tokens) ERC721A(TOKEN_NAME, TOKEN_SYMBOL) {
         _setDefaultRoyalty(msg.sender, DEFAULT_ROYALTY);
         for (uint i = 0; i < _tokens.length; i++) {
             allowedTokens[_tokens[i]] = true;
