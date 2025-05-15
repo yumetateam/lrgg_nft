@@ -28,8 +28,8 @@ contract GenesisGodNFT is ERC721A, AccessControl, ERC2981, ReentrancyGuard {
     uint256 public mintPrice = 100_000; // Mint price per token in USDT/USDC
     uint256 public maxMintPerTxn = 300; // Maximum NFTs allowed to mint per transaction
 
-    mapping(address => bool) private allowedTokens; // Whitelisted ERC20 tokens allowed for minting
-    mapping(address => uint8) private tokenDecimals; // Whitelisted ERC20 tokenDecimals
+    mapping(address => bool) public allowedTokens; // Whitelisted ERC20 tokens allowed for minting
+    mapping(address => uint8) public tokenDecimals; // Whitelisted ERC20 tokenDecimals
     mapping(address => uint256) private whitelistQuota; // Minting quota per user
     mapping(address => uint256) private mintedCount; // Total minted count per user
 
@@ -64,7 +64,18 @@ contract GenesisGodNFT is ERC721A, AccessControl, ERC2981, ReentrancyGuard {
     constructor(address[] memory _tokens) ERC721A(TOKEN_NAME, TOKEN_SYMBOL) {
         _setDefaultRoyalty(msg.sender, DEFAULT_ROYALTY);
         for (uint i = 0; i < _tokens.length; i++) {
-            allowedTokens[_tokens[i]] = true;
+            if (_tokens[i] == address(0)) {
+                revert("GenesisGod: Invalid token address");
+            }
+            if (!_isValidERC20(_tokens[i])) {
+                revert("GenesisGod: Invalid erc20 token address");
+            }
+            allowedTokens[_tokens[i]]= true;
+            try IERC20Metadata(_tokens[i]).decimals() returns (uint8 decimals) {
+                tokenDecimals[_tokens[i]] = decimals;
+            } catch {
+                revert("GenesisGod: Token does not support decimals()");
+            }
         }
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(ADMIN_ROLE, msg.sender);
