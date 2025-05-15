@@ -3,6 +3,7 @@
 **/artifacts/**
 .DS_Store
 node_modules/
+contracts/*_flattened.sol
 package-lock.json
 
 # Remix plugin state folders
