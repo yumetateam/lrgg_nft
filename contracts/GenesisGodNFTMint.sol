@@ -22,12 +22,11 @@ contract GenesisGodNFT is ERC721A, AccessControl, ERC2981, ReentrancyGuard {
     uint256 public constant MAX_SUPPLY = 300; // Maximum number of NFTs that can be minted
     uint96 public constant DEFAULT_ROYALTY = 1000; // Default royalty fee (in basis points, 1000 = 10%)
     uint256 public constant MIN_TOKEN_ID = 1001; // Token IDs start from 1001
-    uint256 public constant MINT_PRICE = 100_000; // Mint price per token in USDT/USDC
-
+    uint256 public mintPrice = 100_000; // Mint price per token in USDT/USDC
     uint256 public maxMintPerTxn = 300; // Maximum NFTs allowed to mint per transaction
 
     mapping(address => bool) private allowedTokens; // Whitelisted ERC20 tokens allowed for minting
-    mapping(address => uint8) public tokenDecimals; // Whitelisted ERC20 tokenDecimals
+    mapping(address => uint8) private tokenDecimals; // Whitelisted ERC20 tokenDecimals
     mapping(address => uint256) private whitelistQuota; // Minting quota per user
     mapping(address => uint256) private mintedCount; // Total minted count per user
 
@@ -45,6 +44,7 @@ contract GenesisGodNFT is ERC721A, AccessControl, ERC2981, ReentrancyGuard {
     event RoyaltyUpdated(address indexed receiver, uint96 fee); // Emitted when royalty info is updated
     event TokenAllowed(address indexed token); // Emitted when a new token is allowed
     event WhitelistSet(address indexed user, uint256 quota); // Emitted when a whitelist quota is set
+    event MintPriceUpdated(uint256 newPrice); // Emitted when a mintPrice is set
 
     /**
      * @notice Returns the starting token ID (overridden from ERC721A)
@@ -69,11 +69,39 @@ contract GenesisGodNFT is ERC721A, AccessControl, ERC2981, ReentrancyGuard {
     }
 
     /**
+     * @notice Sets a new mint price for Genesis God NFTs.
+     * @dev Only callable by accounts with ADMIN_ROLE and when the contract is not locked.
+     *      The new mint price must be greater than zero.
+     * @param newPrice The new mint price in payment token's smallest unit (e.g., 1e6 for USDT/USDC).
+     */
+    function setMintPrice(uint256 newPrice) external onlyRole(ADMIN_ROLE) {
+        require(!isLocked, "GenesisGod: Contract is locked");
+        require(newPrice > 0, "GenesisGod: Invalid mint price");
+        mintPrice = newPrice;
+        emit MintPriceUpdated(newPrice);
+    }
+
+    /** 
+     * @notice Checks whether a given address is a valid ERC20 token contract
+     * @dev Attempts to call `totalSupply()` on the address; if the call succeeds, it is considered a valid ERC20
+     * @param token The address to check for ERC20 validity
+     * @return True if the address is a valid ERC20 token contract, false otherwise
+     */
+    function _isValidERC20(address token) internal view returns (bool) {
+        try IERC20(token).totalSupply() returns (uint256) {
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    /**
      * @notice Adds a new ERC20 token address as an accepted payment token
      * @param token Address of the ERC20 token to allow
      */
     function addAllowedToken(address token) external onlyRole(ADMIN_ROLE) {
         require(token != address(0), "GenesisGod: Invalid token address");
+        require(_isValidERC20(token), "GenesisGod: Invalid erc20 token address");
         allowedTokens[token] = true;
         try IERC20Metadata(token).decimals() returns (uint8 decimals) {
             tokenDecimals[token] = decimals;
@@ -172,7 +200,7 @@ contract GenesisGodNFT is ERC721A, AccessControl, ERC2981, ReentrancyGuard {
         mintedCount[msg.sender] = minted + quantity;
 
         uint8 decimals = tokenDecimals[paymentToken];
-        uint256 adjustedPrice = MINT_PRICE * (10 ** decimals);
+        uint256 adjustedPrice = mintPrice * (10 ** decimals);
         IERC20(paymentToken).transferFrom(msg.sender, address(this), adjustedPrice * quantity);
 
         _mint(msg.sender, quantity);
@@ -280,7 +308,7 @@ contract GenesisGodNFT is ERC721A, AccessControl, ERC2981, ReentrancyGuard {
      * @notice Grants ADMIN_ROLE to a given account
      * @param account Address to grant role to
      */
-    function grantAdmin(address account) external onlyRole(ADMIN_ROLE) {
+    function grantAdmin(address account) external onlyRole(DEFAULT_ADMIN_ROLE) {
         _grantRole(ADMIN_ROLE, account);
     }
 
@@ -288,7 +316,7 @@ contract GenesisGodNFT is ERC721A, AccessControl, ERC2981, ReentrancyGuard {
      * @notice Revokes ADMIN_ROLE from a given account
      * @param account Address to revoke role from
      */
-    function revokeAdmin(address account) external onlyRole(ADMIN_ROLE) {
+    function revokeAdmin(address account) external onlyRole(DEFAULT_ADMIN_ROLE) {
         _revokeRole(ADMIN_ROLE, account);
     }
 
@@ -296,7 +324,7 @@ contract GenesisGodNFT is ERC721A, AccessControl, ERC2981, ReentrancyGuard {
      * @notice Grants MINTER_ROLE to a given account
      * @param account Address to grant role to
      */
-    function grantMinter(address account) external onlyRole(ADMIN_ROLE) {
+    function grantMinter(address account) external onlyRole(DEFAULT_ADMIN_ROLE) {
         _grantRole(MINTER_ROLE, account);
     }
 
@@ -304,7 +332,7 @@ contract GenesisGodNFT is ERC721A, AccessControl, ERC2981, ReentrancyGuard {
      * @notice Revokes MINTER_ROLE from a given account
      * @param account Address to revoke role from
      */
-    function revokeMinter(address account) external onlyRole(ADMIN_ROLE) {
+    function revokeMinter(address account) external onlyRole(DEFAULT_ADMIN_ROLE) {
         _revokeRole(MINTER_ROLE, account);
     }
 
