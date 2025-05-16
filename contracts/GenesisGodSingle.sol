@@ -2,6 +2,7 @@
 pragma solidity ^0.8.20;
 
 import "erc721a/contracts/ERC721A.sol";
+import "erc721a/contracts/extensions/ERC721AQueryable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -20,6 +21,7 @@ contract GenesisGodNFT is ERC721A, AccessControl, ERC2981, ReentrancyGuard {
     using Strings for uint256;
 
     uint256 constant MAX_SUPPLY = 300; // Maximum number of NFTs that can be minted
+    uint256 constant MAX_QUERY_SIZE = 10; // Maximum page size
     uint96 constant DEFAULT_ROYALTY = 500; // Default royalty fee (in basis points, 1000 = 10%)
     uint256 constant MIN_TOKEN_ID = 1; // Token IDs start from 1001
     string constant TOKEN_SYMBOL = "LRGG"; // Token symbol
@@ -144,7 +146,7 @@ contract GenesisGodNFT is ERC721A, AccessControl, ERC2981, ReentrancyGuard {
      * @notice Sets the maximum number of NFTs that can be minted in one transaction
      * @param _newmaxMintPerTxn New minting limit per transaction
      */
-    function setmaxMintAmount(uint256 _newmaxMintPerTxn) external onlyRole(ADMIN_ROLE) {
+    function setMaxMintAmount(uint256 _newmaxMintPerTxn) external onlyRole(ADMIN_ROLE) {
         maxMintPerTxn = _newmaxMintPerTxn;
     }
 
@@ -166,7 +168,7 @@ contract GenesisGodNFT is ERC721A, AccessControl, ERC2981, ReentrancyGuard {
     function tokenURI(uint256 tokenId)
         public
         view
-        override
+        override(ERC721A)
         returns (string memory)
     {
         require(_exists(tokenId), "GenesisGod: Token does not exist");
