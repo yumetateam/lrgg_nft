@@ -22,8 +22,8 @@ contract GenesisGodNFT is ERC721AQueryable, AccessControl, ERC2981, ReentrancyGu
 
     uint256 constant MAX_SUPPLY = 300; // Maximum number of NFTs that can be minted
     uint256 constant MAX_QUERY_SIZE = 10; // Maximum page size
-    uint96 constant DEFAULT_ROYALTY = 500; // Default royalty fee (in basis points, 1000 = 10%)
-    uint256 constant MIN_TOKEN_ID = 1; // Token IDs start from 1001
+    uint96 constant DEFAULT_ROYALTY = 500; // Default royalty fee (in basis points, 500 = 5%)
+    uint256 constant MIN_TOKEN_ID = 1; // Token IDs start from 1
     string constant TOKEN_SYMBOL = "LRGG"; // Token symbol
     string constant TOKEN_NAME = "LoveRose Genesis God"; // Token name
     uint256 public maxMintPerTxn = 300; // Maximum NFTs allowed to mint per transaction
@@ -37,13 +37,8 @@ contract GenesisGodNFT is ERC721AQueryable, AccessControl, ERC2981, ReentrancyGu
     event ContractLocked(); // Emitted when the contract is permanently locked
     event ERC721Recovered(address indexed walletAddress, address indexed tokenAddress, uint256 tokenId); // Emitted when an ERC721 token is recovered
     event ERC20Withdrawn(address indexed token, address indexed to, uint256 amount); // Emitted when ERC20 tokens are withdrawn
-    event MintWithToken(address indexed walletAddress, address indexed tokenAddress , uint256 startTokenId, uint256 quantity); // Emitted when minting with ERC20 token
     event BaseTokenURIUpdated(string newURI); // Emitted when base URI is updated
     event RoyaltyUpdated(address indexed receiver, uint96 fee); // Emitted when royalty info is updated
-    event TokenAllowed(address indexed token); // Emitted when a new token is allowed
-    event WhitelistSet(address indexed user, uint256 quota); // Emitted when a whitelist quota is set
-    event MintPriceUpdated(uint256 newPrice); // Emitted when a mintPrice is set
-
     /**
      * @notice Returns the starting token ID (overridden from ERC721A)
      * @return Starting token ID
