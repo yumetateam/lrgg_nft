@@ -9,7 +9,7 @@ package-lock.json
 # Remix plugin state folders
 deps/
 states/
-
+dist
 # Debug info
 *.dbg.json
 *.tsbuildinfo
