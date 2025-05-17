@@ -61,7 +61,6 @@ export function DeployContractButton({
             className="w-full border rounded p-2"
             onChange={(e) => onSelectAddress(e.target.value as `0x${string}`)}
           >
-            <option value="">选择地址</option>
             {addresses.map((addr) => (
               <option key={addr} value={addr}>
                 {shorten(addr)}

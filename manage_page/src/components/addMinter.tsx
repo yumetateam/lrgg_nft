@@ -2,6 +2,7 @@ import { useReadContract, useWriteContract, useAccount, useWaitForTransactionRec
 import { wagmiAbi } from './abi'
 import { useEffect, useState } from 'react'
 import { keccak256 , stringToBytes} from 'viem'
+import { shorten } from '../config'
 
 export function AddMinterButton({
   contractAddress
@@ -10,7 +11,7 @@ export function AddMinterButton({
 }) {
   const { data: hash, isPending: loading, writeContract } = useWriteContract()
   const account = useAccount()
-  const {isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash })
+  const {error, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash })
   const [minter, setMinter] = useState(account.address)
   const [message, setMessage] = useState('')
   const { data: isMinter } = useReadContract({
@@ -46,9 +47,15 @@ export function AddMinterButton({
 
   useEffect(() => {
     if (isConfirmed) {
-      setMessage(`✅ Mint 成功，交易哈希: ${hash}`)
+      setMessage(`✅ 设置成功`)
     }
   }, [isConfirmed])
+
+  useEffect(() => {
+    if (error) {
+      setMessage(`❌ 设置失败：${error}`)
+    }
+  }, [error])
 
   return (
     <form onSubmit={handleMint} className="w-full space-y-4 p-4">
@@ -71,8 +78,18 @@ export function AddMinterButton({
       >
         {loading ? 'granting...' : (isMinter ? 'revokeMinter':'执行 grantMinter')}
       </button>
-      <div></div>
-      {message && <p className="text-center text-green-600">{message}</p>}
+      <div className="flex flex-col items-start space-y-1">
+              {message && <><label className="block text-sm font-medium text-gray-700">消息</label><p className="w-full text-left text-green-600 break-words">{message}</p></>}
+              {hash && <><label className="block text-sm font-medium text-gray-700">交易Hash</label><p className="w-full cursor-pointer text-left text-green-600 break-words" onClick={
+              () => {
+                navigator.clipboard.writeText(hash).then(() => {
+                  alert("复制成功！");
+                }).catch(() => {
+                  alert("复制失败，请手动复制");
+                });
+              }
+              }>{shorten(hash)}</p></>}
+      </div>
     </form>
   )
 }

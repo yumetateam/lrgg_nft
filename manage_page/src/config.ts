@@ -19,6 +19,10 @@ export function shorten(addr: string) {
   return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
 }
 
+
+export function formatNumber(num: bigint): string {
+  return "#" + num.toString().padStart(3, '0');
+}
 const networks = [bsc, bscTestnet]
 
 // Setup wagmi adapter
@@ -30,7 +34,7 @@ export const wagmiAdapter = new WagmiAdapter({
 // Create modal
 const modal = createAppKit({
   adapters: [wagmiAdapter],
-  networks:[bsc, ...networks],
+  networks: networks,
   metadata: {
     name: 'lrgg',
     description: 'LRGG Management',

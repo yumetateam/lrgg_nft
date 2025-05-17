@@ -1,6 +1,7 @@
 import { useReadContract, useWriteContract, useAccount, useWaitForTransactionReceipt } from 'wagmi'
 import { wagmiAbi } from './abi'
 import { useEffect, useState } from 'react'
+import { shorten } from '../config'
 
 export function MintNftButton({
   contractAddress
@@ -9,7 +10,7 @@ export function MintNftButton({
 }) {
   const { data: hash,isPending: loading, writeContract } = useWriteContract()
   const account = useAccount()
-  const { isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash })
+  const { error, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash })
   const { data: totalSupply } = useReadContract({
     address: contractAddress,
     abi: wagmiAbi,
@@ -39,9 +40,15 @@ export function MintNftButton({
 
   useEffect(() => {
     if (isConfirmed) {
-      setMessage(`✅ Mint 成功，交易哈希: ${hash}`)
+      setMessage(`✅ Mint成功`)
     }
   }, [isConfirmed])
+
+  useEffect(() => {
+    if (error) {
+      setMessage(`❌ Mint失败：${error}`)
+    }
+  }, [error])
 
   return (
     <form onSubmit={handleMint} className="w-full space-y-4 p-4">
@@ -88,9 +95,18 @@ export function MintNftButton({
       >
         {loading ? 'Minting...' : '执行 Mint'}
       </button>
-      <div></div>
-
-      {message && <p className="text-center text-green-600">{message}</p>}
+      <div className="flex flex-col items-start space-y-1">
+        {message && <><label className="block text-sm font-medium text-gray-700">消息</label><p className="w-full text-left text-green-600 break-words">{message}</p></>}
+        {hash && <><label className="block text-sm font-medium text-gray-700">交易Hash</label><p className="w-full cursor-pointer text-left text-green-600 break-words" onClick={
+        () => {
+          navigator.clipboard.writeText(hash).then(() => {
+            alert("复制成功！");
+          }).catch(() => {
+            alert("复制失败，请手动复制");
+          });
+        }
+        }>{shorten(hash)}</p></>}
+      </div>
     </form>
   )
 }

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import "erc721a/contracts/ERC721A.sol";
+import "erc721a/contracts/IERC721A.sol";
 import "erc721a/contracts/extensions/ERC721AQueryable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
@@ -16,7 +16,7 @@ import "@openzeppelin/contracts/token/common/ERC2981.sol";
  * @title GenesisGodNFT
  * @notice LoveRose NFT collection with royalty support, access control, USDT/USDC minting, and recovery features.
  */
-contract GenesisGodNFT is ERC721A, AccessControl, ERC2981, ReentrancyGuard {
+contract GenesisGodNFT is ERC721AQueryable, AccessControl, ERC2981, ReentrancyGuard {
     using SafeERC20 for IERC20;
     using Strings for uint256;
 
@@ -168,7 +168,7 @@ contract GenesisGodNFT is ERC721A, AccessControl, ERC2981, ReentrancyGuard {
     function tokenURI(uint256 tokenId)
         public
         view
-        override(ERC721A)
+        override(ERC721A, IERC721A)
         returns (string memory)
     {
         require(_exists(tokenId), "GenesisGod: Token does not exist");
@@ -197,7 +197,7 @@ contract GenesisGodNFT is ERC721A, AccessControl, ERC2981, ReentrancyGuard {
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC721A, ERC2981, AccessControl)
+        override(ERC721A, IERC721A, ERC2981, AccessControl)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
