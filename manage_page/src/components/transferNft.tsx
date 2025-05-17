@@ -13,14 +13,14 @@ export function TransferNftButton({
   const {error, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash })
   const [recipient, setRecipient] = useState("")
   const [message, setMessage] = useState('')
-  const { data: balance } = useReadContract({
+  const { data: balance, refetch: refetchBalance } = useReadContract({
     address: contractAddress,
     abi: wagmiAbi,
     functionName: 'balanceOf',
     args: [ account.address as `0x${string}`],
   })
 
-  const { data: tokens } = useReadContract({
+  const { data: tokens, refetch: refetchTokens } = useReadContract({
     address: contractAddress,
     abi: wagmiAbi,
     functionName: 'tokensOfOwner',
@@ -53,6 +53,8 @@ export function TransferNftButton({
 
   useEffect(() => {
     if (isConfirmed) {
+      refetchBalance({cancelRefetch: true})
+      refetchTokens({cancelRefetch: true})
       setMessage(`✅ 转账成功`)
     }
   }, [isConfirmed])
