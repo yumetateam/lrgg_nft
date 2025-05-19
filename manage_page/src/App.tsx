@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { AddContractButton } from './components/addContract'
 import { AddMinterButton } from './components/addMinter'
 import { TransferNftButton } from './components/transferNft'
+import { SetTokenBaseUriButton } from './components/setTokenBaseUri'
 
 const queryClient = new QueryClient()
 
@@ -60,6 +61,11 @@ export default function App() {
           </div>
           <div className="appkit-buttons-container">
             <TransferNftButton     
+              contractAddress={selectedAddress}
+            />
+          </div>
+          <div className="appkit-buttons-container">
+            <SetTokenBaseUriButton     
               contractAddress={selectedAddress}
             />
           </div>
