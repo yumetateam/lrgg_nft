@@ -1,27 +1,8 @@
 {
-  "name": "Genesis God #067",
-  "description": "LoveRose · Emotional Universe Genesis God NFT - Black Gold Card Supreme",
+  "name": "LoveRose Prime Creator #067",
+  "description": "The Prime Creator NFT of the LoveRose Universe, jointly launched by LoveRose (TR - Tactile Remote Reality & Live Interaction) and InNow, is the foundational digital identity credential of the LoveRose Universe, representing the highest level of membership benefits within the LoveRose ecosystem.",
   "image": "ipfs://QmbEkMKjKE5A2CDWNDjy5DKD8p4GgXqCdyufrtJyz2x9Ub/nft.png",
-  "external_url": "https://rose.love",
-  "animation_url": "",
-  "youtube_url": "",
+  "external_url": "https://www.rose.love",
   "background_color": "#000000",
-  "attributes": [
-    {
-      "trait_type": "Frame",
-      "value": "Gold Emboss"
-    },
-    {
-      "trait_type": "Portrait",
-      "value": "Actress A"
-    },
-    {
-      "trait_type": "Accent",
-      "value": "Crystal Inlay"
-    },
-    {
-      "trait_type": "Rarity",
-      "value": "Diamond"
-    }
-  ]
+  "attributes": []
 }

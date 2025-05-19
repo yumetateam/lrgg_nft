@@ -11,18 +11,18 @@ base_image_url = 'ipfs://QmbEkMKjKE5A2CDWNDjy5DKD8p4GgXqCdyufrtJyz2x9Ub/'
 # Generate metadata for token IDs from 1001 to 1300
 for token_id in range(1, 301):
     metadata = {
-        "name": f"Genesis God #{token_id:03}",
-        "description": "LoveRose · Emotional Universe Genesis God NFT - Black Gold Card Supreme",
+        "name": f"LoveRose Prime Creator #{token_id:03}",
+        "description": "",
         "image": f"{base_image_url}nft.png",
-        "external_url": "https://rose.love",
-        "animation_url":"",
-        "youtube_url":"",
+        "external_url": "https://www.rose.love",
+        #"animation_url":"",
+        #"youtube_url":"",
         "background_color": "#000000",
         "attributes": [
-          { "trait_type": "Frame", "value": "Gold Emboss" },
-          { "trait_type": "Portrait", "value": "Actress A" },
-          { "trait_type": "Accent", "value": "Crystal Inlay" },
-          { "trait_type": "Rarity", "value": "Diamond" }
+          #{ "trait_type": "Frame", "value": "Gold Emboss" },
+          #{ "trait_type": "Portrait", "value": "Actress A" },
+          #{ "trait_type": "Accent", "value": "Crystal Inlay" },
+          #{ "trait_type": "Rarity", "value": "Diamond" }
         ]
     }
 

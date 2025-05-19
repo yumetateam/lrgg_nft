@@ -24,8 +24,8 @@ contract GenesisGodNFT is ERC721AQueryable, AccessControl, ERC2981, ReentrancyGu
     uint256 constant MAX_QUERY_SIZE = 10; // Maximum page size
     uint96 constant DEFAULT_ROYALTY = 500; // Default royalty fee (in basis points, 500 = 5%)
     uint256 constant MIN_TOKEN_ID = 1; // Token IDs start from 1
-    string constant TOKEN_SYMBOL = "LRGG"; // Token symbol
-    string constant TOKEN_NAME = "LoveRose Genesis God"; // Token name
+    string constant TOKEN_SYMBOL = "LRPC"; // Token symbol
+    string constant TOKEN_NAME = "LoveRose Prime Creator"; // Token name
     uint256 public maxMintPerTxn = 300; // Maximum NFTs allowed to mint per transaction
 
     bool public isLocked; // Indicates whether contract settings are locked
