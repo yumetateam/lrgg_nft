@@ -9,15 +9,15 @@ os.makedirs(output_dir, exist_ok=True)  # Create the directory if it doesn't exi
 base_image_url = 'ipfs://QmbEkMKjKE5A2CDWNDjy5DKD8p4GgXqCdyufrtJyz2x9Ub/'
 
 # Generate metadata for token IDs from 1001 to 1300
-for token_id in range(1001, 1301):
+for token_id in range(1, 301):
     metadata = {
-        "name": f"Genesis God #{token_id}",
+        "name": f"Genesis God #{token_id:03}",
         "description": "LoveRose · Emotional Universe Genesis God NFT - Black Gold Card Supreme",
         "image": f"{base_image_url}nft.png",
         "external_url": "https://rose.love",
         "animation_url":"",
         "youtube_url":"",
-        "background_color": "#",
+        "background_color": "#000000",
         "attributes": [
           { "trait_type": "Frame", "value": "Gold Emboss" },
           { "trait_type": "Portrait", "value": "Actress A" },
@@ -27,7 +27,7 @@ for token_id in range(1001, 1301):
     }
 
     # Define the output file path for each JSON
-    file_path = os.path.join(output_dir, f"{token_id}.json")
+    file_path = os.path.join(output_dir, f"{token_id:03}.json")
     
     # Write the metadata as pretty-printed JSON
     with open(file_path, 'w', encoding='utf-8') as f:
