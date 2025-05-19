@@ -6,13 +6,13 @@ output_dir = os.path.join(os.path.dirname(__file__), '../metadata')
 os.makedirs(output_dir, exist_ok=True)  # Create the directory if it doesn't exist
 
 # Base image URL for each NFT
-base_image_url = 'ipfs://Qmatpy7PYEi56mnZfUC8UJkLf7qFNkHGYcfmUt7sLeRduN/'
+base_image_url = 'ipfs://QmbEkMKjKE5A2CDWNDjy5DKD8p4GgXqCdyufrtJyz2x9Ub/'
 
 # Generate metadata for token IDs from 1001 to 1300
 for token_id in range(1, 301):
     metadata = {
         "name": f"LoveRose Prime Creator #{token_id:03}",
-        "description": "",
+        "description": "The Prime Creator NFT of the LoveRose Universe, jointly launched by LoveRose (TR - Tactile Remote Reality & Live Interaction) and InNow, is the foundational digital identity credential of the LoveRose Universe, representing the highest level of membership benefits within the LoveRose ecosystem.",
         "image": f"{base_image_url}nft.png",
         "external_url": "https://www.rose.love",
         #"animation_url":"",
