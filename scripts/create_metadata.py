@@ -6,7 +6,7 @@ output_dir = os.path.join(os.path.dirname(__file__), '../metadata')
 os.makedirs(output_dir, exist_ok=True)  # Create the directory if it doesn't exist
 
 # Base image URL for each NFT
-base_image_url = 'ipfs://QmbEkMKjKE5A2CDWNDjy5DKD8p4GgXqCdyufrtJyz2x9Ub/'
+base_image_url = 'ipfs://Qmatpy7PYEi56mnZfUC8UJkLf7qFNkHGYcfmUt7sLeRduN/'
 
 # Generate metadata for token IDs from 1001 to 1300
 for token_id in range(1, 301):
@@ -27,7 +27,7 @@ for token_id in range(1, 301):
     }
 
     # Define the output file path for each JSON
-    file_path = os.path.join(output_dir, f"{token_id:03}.json")
+    file_path = os.path.join(output_dir, f"{token_id}.json")
     
     # Write the metadata as pretty-printed JSON
     with open(file_path, 'w', encoding='utf-8') as f:
