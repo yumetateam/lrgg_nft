@@ -1,45 +1,52 @@
-import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
+import { useReadContract, useWriteContract, useAccount, useWaitForTransactionReceipt } from 'wagmi'
 import { wagmiAbi } from './abi'
 import { useEffect, useState } from 'react'
+import { keccak256 , stringToBytes} from 'viem'
 import { shorten } from '../config'
 
-export function SetTokenBaseUriButton({
+export function AddAdminButton({
   contractAddress
 }: {
   contractAddress: `0x${string}`
 }) {
   const { data: hash, isPending: loading, writeContract } = useWriteContract()
+  const account = useAccount()
   const {error, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash })
+  const [admin, setAdmin] = useState(account.address)
   const [message, setMessage] = useState('')
-  const [baseUri, setBaseUri] = useState("")
-  const { data: oldBaseURI, refetch: refetchBaseTokenURI } = useReadContract({
+  const { data: isAdmin, refetch: refetchIsAdmin} = useReadContract({
     address: contractAddress,
     abi: wagmiAbi,
-    functionName: 'baseTokenURI',
-    args: [],
+    functionName: 'hasRole',
+    args: [keccak256(stringToBytes('ADMIN_ROLE')), admin as `0x${string}`],
   })
 
-  const handleMint = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleGrant = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!contractAddress) {
       setMessage('❌ 请先选择合约地址')
       return
     }
-    if (baseUri == undefined || baseUri == "") {
-      setMessage('❌ 请设置url')
-      return
+    if (isAdmin) {
+      writeContract({
+        address: contractAddress,
+        abi: wagmiAbi,
+        functionName: 'revokeAdmin',
+        args: [admin as `0x${string}`],
+      })
+    } else {
+      writeContract({
+        address: contractAddress,
+        abi: wagmiAbi,
+        functionName: 'grantAdmin',
+        args: [admin as `0x${string}`],
+      })
     }
-    writeContract({
-      address: contractAddress,
-      abi: wagmiAbi,
-      functionName: 'setBaseTokenURI',
-      args: [baseUri as string],
-    })
   }
 
   useEffect(() => {
     if (isConfirmed) {
-      refetchBaseTokenURI({cancelRefetch: true})
+      refetchIsAdmin({cancelRefetch: true})
       setMessage(`✅ 设置成功`)
     }
   }, [isConfirmed])
@@ -51,25 +58,27 @@ export function SetTokenBaseUriButton({
   }, [error])
 
   return (
-    <form onSubmit={handleMint} className="w-full space-y-4 p-4">
-      <span><h2 className="text-xl font-bold">设置tokenBaseURI:</h2>{contractAddress}</span>
-      <span><h2 className="text-xl font-bold">当前URL:</h2>{oldBaseURI}</span>
+    <form onSubmit={handleGrant} className="w-full space-y-4 p-4">
+      <span><h2 className="text-xl font-bold">{isAdmin?"取消":""}授权Admin:</h2>{contractAddress}</span>
       <div>
-        <label className="block text-sm font-medium text-gray-700">设置Url</label>
+        <label className="block text-sm font-medium text-gray-700">授权钱包地址</label>
         <input
           type="text"
-          name="baseUri"
+          name="minter"
           className="w-full p-2 border rounded"
-          value={baseUri}
-          onChange={(e) => setBaseUri(e.target.value)}
+          value={admin}
+          onChange={(e) => {
+            setAdmin(e.target.value as `0x${string}`)
+        }}
         />
       </div>
+
       <button
         type="submit"
         disabled={loading}
         className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 disabled:opacity-50"
       >
-        {loading ? 'setBaseUri...' : '执行 setBaseUri'}
+        {loading ? (isAdmin ? 'revoking':'执行 granting') : (isAdmin ? '执行 revokeAdmin':'执行 grantAdmin')}
       </button>
       <div className="flex flex-col items-start space-y-1">
               {message && <><label className="block text-sm font-medium text-gray-700">消息</label><p className="w-full text-left text-green-600 break-words">{loading ? "pending" : message}</p></>}

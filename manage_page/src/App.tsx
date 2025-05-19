@@ -8,6 +8,7 @@ import { AddContractButton } from './components/addContract'
 import { AddMinterButton } from './components/addMinter'
 import { TransferNftButton } from './components/transferNft'
 import { SetTokenBaseUriButton } from './components/setTokenBaseUri'
+import { AddAdminButton } from './components/addAdmin'
 
 const queryClient = new QueryClient()
 
@@ -56,6 +57,11 @@ export default function App() {
           </div>
           <div className="appkit-buttons-container">
             <AddMinterButton     
+              contractAddress={selectedAddress}
+            />
+          </div>
+          <div className="appkit-buttons-container">
+            <AddAdminButton     
               contractAddress={selectedAddress}
             />
           </div>

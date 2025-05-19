@@ -101,7 +101,7 @@ export function TransferNftButton({
         {loading ? 'transfer...' : '执行 transfer'}
       </button>
       <div className="flex flex-col items-start space-y-1">
-              {message && <><label className="block text-sm font-medium text-gray-700">消息</label><p className="w-full text-left text-green-600 break-words">{message}</p></>}
+              {message && <><label className="block text-sm font-medium text-gray-700">消息</label><p className="w-full text-left text-green-600 break-words">{loading ? "pending" : message}</p></>}
               {hash && <><label className="block text-sm font-medium text-gray-700">交易Hash</label><p className="w-full cursor-pointer text-left text-green-600 break-words" onClick={
               () => {
                 navigator.clipboard.writeText(hash).then(() => {

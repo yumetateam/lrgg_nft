@@ -11,7 +11,7 @@ export function MintNftButton({
   const { data: hash,isPending: loading, writeContract } = useWriteContract()
   const account = useAccount()
   const { error, isSuccess: isConfirmed } = useWaitForTransactionReceipt({ hash })
-  const { data: totalSupply } = useReadContract({
+  const { data: totalSupply, refetch: refetchTotalSupply } = useReadContract({
     address: contractAddress,
     abi: wagmiAbi,
     functionName: 'totalSupply',
@@ -40,6 +40,7 @@ export function MintNftButton({
 
   useEffect(() => {
     if (isConfirmed) {
+      refetchTotalSupply({cancelRefetch: true})
       setMessage(`✅ Mint成功`)
     }
   }, [isConfirmed])
@@ -96,7 +97,7 @@ export function MintNftButton({
         {loading ? 'Minting...' : '执行 Mint'}
       </button>
       <div className="flex flex-col items-start space-y-1">
-        {message && <><label className="block text-sm font-medium text-gray-700">消息</label><p className="w-full text-left text-green-600 break-words">{message}</p></>}
+        {message && <><label className="block text-sm font-medium text-gray-700">消息</label><p className="w-full text-left text-green-600 break-words">{loading ? "pending" : message}</p></>}
         {hash && <><label className="block text-sm font-medium text-gray-700">交易Hash</label><p className="w-full cursor-pointer text-left text-green-600 break-words" onClick={
         () => {
           navigator.clipboard.writeText(hash).then(() => {
