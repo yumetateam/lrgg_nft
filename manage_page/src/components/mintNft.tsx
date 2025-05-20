@@ -19,7 +19,6 @@ export function MintNftButton({
   })
 
   const [recipient, setRecipient] = useState(account.address)
-  const [isSafe, setIsSafe] = useState(false)
   const [quantity, setQuantity] = useState(1)
   const [message, setMessage] = useState('')
 
@@ -34,7 +33,7 @@ export function MintNftButton({
       address: contractAddress,
       abi: wagmiAbi,
       functionName: 'mint',
-      args: [recipient as `0x${string}`, isSafe, BigInt(quantity)],
+      args: [recipient as `0x${string}`, BigInt(quantity)],
     })
   }
 
@@ -65,17 +64,6 @@ export function MintNftButton({
           onChange={(e) => setRecipient(e.target.value as `0x${string}`)}
         />
       </div>
-
-      <div className="flex items-center space-x-2">
-        <input
-          type="checkbox"
-          name="isSafe"
-          checked={isSafe}
-          onChange={() => setIsSafe(!isSafe)}
-        />
-        <label className="text-sm text-gray-700">使用 safeMint</label>
-      </div>
-
       <div>
         <label className="block text-sm font-medium text-gray-700">数量</label>
         <input
