@@ -44,13 +44,13 @@ export function PauseButton({
   useEffect(() => {
     if (isConfirmed) {
       refetchIsPaused({cancelRefetch: true})
-      setMessage(`✅ 合约暂停成功`)
+      setMessage(`✅ 合约操作成功`)
     }
   }, [isConfirmed])
 
   useEffect(() => {
     if (error) {
-      setMessage(`❌ 合约暂停失败：${error}`)
+      setMessage(`❌ 合约操作失败：${error}`)
     }
   }, [error])
 
