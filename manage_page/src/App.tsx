@@ -9,6 +9,7 @@ import { AddMinterButton } from './components/addMinter'
 import { TransferNftButton } from './components/transferNft'
 import { SetTokenBaseUriButton } from './components/setTokenBaseUri'
 import { AddAdminButton } from './components/addAdmin'
+import { PauseButton } from './components/pause'
 
 const queryClient = new QueryClient()
 
@@ -75,6 +76,12 @@ export default function App() {
               contractAddress={selectedAddress}
             />
           </div>
+          <div className="appkit-buttons-container">
+            <PauseButton     
+              contractAddress={selectedAddress}
+            />
+          </div>
+          
           <div className="appkit-buttons-container">
             <AddContractButton 
               contractAddress={selectedAddress} 
