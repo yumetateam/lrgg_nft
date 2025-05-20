@@ -11,12 +11,13 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/common/ERC2981.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
 
 /**
  * @title GenesisGodNFT
  * @notice LoveRose NFT collection with royalty support, access control, USDT/USDC minting, and recovery features.
  */
-contract GenesisGodNFT is ERC721AQueryable, AccessControl, ERC2981, ReentrancyGuard {
+contract GenesisGodNFT is ERC721AQueryable, AccessControl, ERC2981, ReentrancyGuard , Pausable{
     using SafeERC20 for IERC20;
     using Strings for uint256;
 
@@ -70,35 +71,14 @@ contract GenesisGodNFT is ERC721AQueryable, AccessControl, ERC2981, ReentrancyGu
     /**
      * @notice Mints new NFTs to a specified recipient
      * @param recipient Address to receive the NFTs
-     * @param safe If true, use _safeMint (checks for ERC721Receiver), else use _mint
      * @param quantity Number of NFTs to mint
      */
-    function mint(address recipient, bool safe, uint256 quantity) external onlyRole(MINTER_ROLE) {
+    function mint(address recipient, uint256 quantity) external onlyRole(MINTER_ROLE) whenNotPaused{
         require(recipient != address(0), "GenesisGod: Invalid recipient");
-        require(safe || !_isContract(recipient), "GenesisGod: Unsafe mint to contract not allowed");
         require(quantity > 0, "GenesisGod: Quantity must be greater than zero");
         require(quantity <= maxMintPerTxn, "GenesisGod: Quantity must be smaller than maxMintPerTxn");
-        require((totalSupply() + quantity) <= MAX_SUPPLY, string.concat(
-            "Quantity (",
-            Strings.toString(quantity),
-            ") exceeds totalSupply (",
-            Strings.toString(totalSupply()),
-            ")")
-        );
-        if (safe) {
-            _safeMint(recipient, quantity);
-        } else {
-            _mint(recipient, quantity);
-        }
-    }
-
-    /**
-     * @notice Checks if an address is a contract
-     * @param account Address to check
-     * @return True if the address is a contract, false otherwise
-     */
-    function _isContract(address account) internal view returns (bool) {
-        return account.code.length > 0;
+        require((totalSupply() + quantity) <= MAX_SUPPLY, "Quantity exceeds totalSupply");
+        _safeMint(recipient, quantity);
     }
 
     /**
@@ -110,6 +90,7 @@ contract GenesisGodNFT is ERC721AQueryable, AccessControl, ERC2981, ReentrancyGu
         external
         onlyRole(ADMIN_ROLE)
         nonReentrant
+        whenNotPaused
     {
         require(tokenAddress != address(this), "GenesisGod: Cannot recover own tokens");
         IERC721(tokenAddress).safeTransferFrom(address(this), msg.sender, tokenId);
@@ -126,6 +107,7 @@ contract GenesisGodNFT is ERC721AQueryable, AccessControl, ERC2981, ReentrancyGu
         external
         onlyRole(ADMIN_ROLE)
         nonReentrant
+        whenNotPaused
     {
         require(token != address(0), "Invalid token address");
         require(recipient != address(0), "Invalid recipient");
@@ -231,10 +213,34 @@ contract GenesisGodNFT is ERC721AQueryable, AccessControl, ERC2981, ReentrancyGu
     }
 
     /**
-     * @notice Returns the total number of tokens minted
-     * @return Total minted count
+     * @notice Pauses contract operations
      */
-    function totalMinted() external view returns (uint256) {
-        return _totalMinted();
+    function pause() external onlyRole(ADMIN_ROLE) {
+        _pause();
+    }
+
+    /**
+     * @notice Resumes contract operations
+     */
+    function unpause() external onlyRole(ADMIN_ROLE) {
+        _unpause();
+    }
+
+    /**
+    * @notice Allows an account to renounce (give up) a role it holds
+    * @dev Overrides AccessControl's renounceRole to prevent renouncing critical roles
+    *      such as DEFAULT_ADMIN_ROLE and ADMIN_ROLE to avoid losing essential permissions
+    * @param role The role identifier to renounce
+    * @param account The address of the account renouncing the role
+    *
+    * Requirements:
+    * - The role cannot be DEFAULT_ADMIN_ROLE or ADMIN_ROLE, as these are critical roles
+    */
+    function renounceRole(bytes32 role, address account) public override {
+        require(
+            role != DEFAULT_ADMIN_ROLE && role != ADMIN_ROLE,
+            "GenesisGod: cannot renounce critical roles"
+        );
+        super.renounceRole(role, account);
     }
 }
