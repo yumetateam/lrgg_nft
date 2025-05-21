@@ -22,7 +22,6 @@ contract GenesisGodNFT is ERC721AQueryable, AccessControl, ERC2981, ReentrancyGu
     using Strings for uint256;
 
     uint256 constant MAX_SUPPLY = 300; // Maximum number of NFTs that can be minted
-    uint256 constant MAX_QUERY_SIZE = 10; // Maximum page size
     uint96 constant DEFAULT_ROYALTY = 500; // Default royalty fee (in basis points, 500 = 5%)
     uint256 constant MIN_TOKEN_ID = 1; // Token IDs start from 1
     string constant TOKEN_SYMBOL = "LRPC"; // Token symbol
