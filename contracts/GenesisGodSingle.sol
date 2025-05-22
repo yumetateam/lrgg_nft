@@ -29,7 +29,7 @@ contract GenesisGodNFT is ERC721AQueryable, AccessControl, ERC2981, ReentrancyGu
     uint256 public maxMintPerTxn = 300; // Maximum NFTs allowed to mint per transaction
 
     bool public isLocked; // Indicates whether contract settings are locked
-    string public baseTokenURI = "ipfs://QmNS6ZZbGBeCW2SizvjNd3szmUYCpBWpKMLBFT43Sbn8Me/"; // Base URI for token metadata
+    string public baseTokenURI = "ipfs://QmVvtQfWYCWVAvj6tvFCZB9GcwVnLfwj8BzvE2ZM6WKFZa/"; // Base URI for token metadata
 
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE"); // Role identifier for admin access
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE"); // Role identifier for minter access
