@@ -3,6 +3,7 @@ pragma solidity ^0.8.20;
 
 import "erc721a/contracts/IERC721A.sol";
 import "erc721a/contracts/extensions/ERC721AQueryable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -17,7 +18,7 @@ import "@openzeppelin/contracts/security/Pausable.sol";
  * @title GenesisGodNFT
  * @notice LoveRose NFT collection with royalty support, access control, USDT/USDC minting, and recovery features.
  */
-contract GenesisGodNFT is ERC721AQueryable, AccessControl, ERC2981, ReentrancyGuard , Pausable{
+contract GenesisGodNFT is ERC721AQueryable, Ownable, AccessControl, ERC2981, ReentrancyGuard, Pausable {
     using SafeERC20 for IERC20;
     using Strings for uint256;
 
@@ -29,7 +30,7 @@ contract GenesisGodNFT is ERC721AQueryable, AccessControl, ERC2981, ReentrancyGu
     uint256 public maxMintPerTxn = 300; // Maximum NFTs allowed to mint per transaction
 
     bool public isLocked; // Indicates whether contract settings are locked
-    string public baseTokenURI = "ipfs://QmVvtQfWYCWVAvj6tvFCZB9GcwVnLfwj8BzvE2ZM6WKFZa/"; // Base URI for token metadata
+    string public baseTokenURI = "ipfs://QmdByYi955od4AGA7ZJrSZHmi8bbhQ2joZg3EoVjzRL18Z/"; // Base URI for token metadata
 
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE"); // Role identifier for admin access
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE"); // Role identifier for minter access
@@ -39,6 +40,7 @@ contract GenesisGodNFT is ERC721AQueryable, AccessControl, ERC2981, ReentrancyGu
     event ERC20Withdrawn(address indexed token, address indexed to, uint256 amount); // Emitted when ERC20 tokens are withdrawn
     event BaseTokenURIUpdated(string newURI); // Emitted when base URI is updated
     event RoyaltyUpdated(address indexed receiver, uint96 fee); // Emitted when royalty info is updated
+    
     /**
      * @notice Returns the starting token ID (overridden from ERC721A)
      * @return Starting token ID
@@ -50,7 +52,7 @@ contract GenesisGodNFT is ERC721AQueryable, AccessControl, ERC2981, ReentrancyGu
     /**
      * @notice Contract constructor
      */
-    constructor() ERC721A(TOKEN_NAME, TOKEN_SYMBOL) {
+    constructor() ERC721A(TOKEN_NAME, TOKEN_SYMBOL) Ownable(msg.sender) {
         _setDefaultRoyalty(msg.sender, DEFAULT_ROYALTY);
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(ADMIN_ROLE, msg.sender);
@@ -176,14 +178,14 @@ contract GenesisGodNFT is ERC721AQueryable, AccessControl, ERC2981, ReentrancyGu
         override(ERC721A, IERC721A, ERC2981, AccessControl)
         returns (bool)
     {
-        return super.supportsInterface(interfaceId);
+        return ERC721A.supportsInterface(interfaceId) || ERC2981.supportsInterface(interfaceId) ||AccessControl.supportsInterface(interfaceId);
     }
 
     /**
      * @notice Grants ADMIN_ROLE to a given account
      * @param account Address to grant role to
      */
-    function grantAdmin(address account) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function grantAdmin(address account) external onlyOwner {
         _grantRole(ADMIN_ROLE, account);
     }
 
@@ -191,7 +193,7 @@ contract GenesisGodNFT is ERC721AQueryable, AccessControl, ERC2981, ReentrancyGu
      * @notice Revokes ADMIN_ROLE from a given account
      * @param account Address to revoke role from
      */
-    function revokeAdmin(address account) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function revokeAdmin(address account) external onlyOwner {
         _revokeRole(ADMIN_ROLE, account);
     }
 
@@ -199,7 +201,7 @@ contract GenesisGodNFT is ERC721AQueryable, AccessControl, ERC2981, ReentrancyGu
      * @notice Grants MINTER_ROLE to a given account
      * @param account Address to grant role to
      */
-    function grantMinter(address account) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function grantMinter(address account) external onlyOwner {
         _grantRole(MINTER_ROLE, account);
     }
 
@@ -207,7 +209,7 @@ contract GenesisGodNFT is ERC721AQueryable, AccessControl, ERC2981, ReentrancyGu
      * @notice Revokes MINTER_ROLE from a given account
      * @param account Address to revoke role from
      */
-    function revokeMinter(address account) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function revokeMinter(address account) external onlyOwner {
         _revokeRole(MINTER_ROLE, account);
     }
 
