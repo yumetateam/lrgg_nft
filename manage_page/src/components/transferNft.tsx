@@ -93,6 +93,7 @@ export function TransferNftButton({
           ))}
         </select>
       </div>
+      <img src={`https://dweb.link/ipfs/bafybeigg6yblnctukey7ntwhgubzyrij4s7ofbq64qfwyqj7i7puweufzu/${tokenId.padStart(3, '0')}.png`} alt={`NO NFT SELECTED`} className="mt-2" />
       <button
         type="submit"
         disabled={loading || balance === undefined || balance <= 0}
