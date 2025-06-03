@@ -15,10 +15,10 @@ import "@openzeppelin/contracts/token/common/ERC2981.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 
 /**
- * @title GenesisGodNFT
+ * @title PrimeCreatorNFT
  * @notice LoveRose NFT collection with royalty support, access control, USDT/USDC minting, and recovery features.
  */
-contract GenesisGodNFT is ERC721AQueryable, Ownable, AccessControl, ERC2981, ReentrancyGuard, Pausable {
+contract PrimeCreatorNFT is ERC721AQueryable, Ownable, AccessControl, ERC2981, ReentrancyGuard, Pausable {
     using SafeERC20 for IERC20;
     using Strings for uint256;
 
@@ -64,7 +64,7 @@ contract GenesisGodNFT is ERC721AQueryable, Ownable, AccessControl, ERC2981, Ree
      * @dev Prevents future updates to baseTokenURI or other mutable states
      */
     function lockContract() external onlyRole(ADMIN_ROLE) {
-        require(!isLocked, "GenesisGod: Contract is already locked");
+        require(!isLocked, "PrimeCreatorNFT: Contract is already locked");
         isLocked = true;
         emit ContractLocked();
     }
@@ -75,9 +75,9 @@ contract GenesisGodNFT is ERC721AQueryable, Ownable, AccessControl, ERC2981, Ree
      * @param quantity Number of NFTs to mint
      */
     function mint(address recipient, uint256 quantity) external onlyRole(MINTER_ROLE) whenNotPaused{
-        require(recipient != address(0), "GenesisGod: Invalid recipient");
-        require(quantity > 0, "GenesisGod: Quantity must be greater than zero");
-        require(quantity <= maxMintPerTxn, "GenesisGod: Quantity must be smaller than maxMintPerTxn");
+        require(recipient != address(0), "PrimeCreatorNFT: Invalid recipient");
+        require(quantity > 0, "PrimeCreatorNFT: Quantity must be greater than zero");
+        require(quantity <= maxMintPerTxn, "PrimeCreatorNFT: Quantity must be smaller than maxMintPerTxn");
         require((totalSupply() + quantity) <= MAX_SUPPLY, "Quantity exceeds totalSupply");
         _safeMint(recipient, quantity);
     }
@@ -93,7 +93,7 @@ contract GenesisGodNFT is ERC721AQueryable, Ownable, AccessControl, ERC2981, Ree
         nonReentrant
         whenNotPaused
     {
-        require(tokenAddress != address(this), "GenesisGod: Cannot recover own tokens");
+        require(tokenAddress != address(this), "PrimeCreatorNFT: Cannot recover own tokens");
         IERC721(tokenAddress).safeTransferFrom(address(this), msg.sender, tokenId);
         emit ERC721Recovered(msg.sender, tokenAddress, tokenId);
     }
@@ -133,7 +133,7 @@ contract GenesisGodNFT is ERC721AQueryable, Ownable, AccessControl, ERC2981, Ree
      * @param uri New base token URI
      */
     function setBaseTokenURI(string memory uri) external onlyRole(ADMIN_ROLE) {
-        require(!isLocked, "GenesisGod: Contract is locked");
+        require(!isLocked, "PrimeCreatorNFT: Contract is locked");
         baseTokenURI = uri;
         emit BaseTokenURIUpdated(uri);
     }
@@ -149,7 +149,7 @@ contract GenesisGodNFT is ERC721AQueryable, Ownable, AccessControl, ERC2981, Ree
         override(ERC721A, IERC721A)
         returns (string memory)
     {
-        require(_exists(tokenId), "GenesisGod: Token does not exist");
+        require(_exists(tokenId), "PrimeCreatorNFT: Token does not exist");
         string memory baseURI = baseTokenURI;
         return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, tokenId.toString(), ".json")) : "";
     }
@@ -160,9 +160,9 @@ contract GenesisGodNFT is ERC721AQueryable, Ownable, AccessControl, ERC2981, Ree
      * @param feeNumerator Royalty fee in basis points
      */
     function setRoyalty(address receiver, uint96 feeNumerator) external onlyRole(ADMIN_ROLE) {
-        require(!isLocked, "GenesisGod: Contract is locked");
-        require(feeNumerator <= _feeDenominator(), "GenesisGod: Royalty fee too high");
-        require(receiver != address(0), "GenesisGod: Invalid royalty receiver");
+        require(!isLocked, "PrimeCreatorNFT: Contract is locked");
+        require(feeNumerator <= _feeDenominator(), "PrimeCreatorNFT: Royalty fee too high");
+        require(receiver != address(0), "PrimeCreatorNFT: Invalid royalty receiver");
         _setDefaultRoyalty(receiver, feeNumerator);
         emit RoyaltyUpdated(receiver, feeNumerator);
     }
@@ -240,7 +240,7 @@ contract GenesisGodNFT is ERC721AQueryable, Ownable, AccessControl, ERC2981, Ree
     function renounceRole(bytes32 role, address account) public override {
         require(
             role != DEFAULT_ADMIN_ROLE && role != ADMIN_ROLE,
-            "GenesisGod: cannot renounce critical roles"
+            "PrimeCreatorNFT: cannot renounce critical roles"
         );
         super.renounceRole(role, account);
     }
