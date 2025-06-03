@@ -6,7 +6,7 @@ output_dir = os.path.join(os.path.dirname(__file__), '../metadata')
 os.makedirs(output_dir, exist_ok=True)  # Create the directory if it doesn't exist
 
 # Base image URL for each NFT
-base_image_url = 'ipfs://QmSyLTYzCzRBFcFrVmBBdA3GJyfN4RgVV8y7a4zvqrSVH6/'
+base_image_url = 'ipfs://bafybeice2sm6v4c4zo4yxna5xftlabx4c556iurpdxjwdrv2xgmyh6uwju/'
 
 # Generate metadata for token IDs from 1001 to 1300
 for token_id in range(1, 301):
