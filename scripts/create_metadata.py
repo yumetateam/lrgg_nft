@@ -12,7 +12,7 @@ base_image_url = 'ipfs://QmSyLTYzCzRBFcFrVmBBdA3GJyfN4RgVV8y7a4zvqrSVH6/'
 for token_id in range(1, 301):
     metadata = {
         "name": f"LoveRose Prime Creator #{token_id:03}",
-        "description": "The Prime Creator NFT of the LoveRose Universe, jointly launched by LoveRose (TR - Tactile Remote Reality & Live Interaction) and InNow, is the foundational digital identity credential of the LoveRose Universe, representing the highest level of membership benefits within the LoveRose ecosystem.",
+        "description": "The Prime Creator NFT of the LoveRose Universe—an exclusive digital identity credential co-issued by LoveRose (TR - Tactile Remote Reality & Live Interaction) and InNow. This prestigious token grants holders supreme membership status and exclusive privileges within the LoveRose Universe.",
         "image": f"{base_image_url}{token_id:03}.png",
         "external_url": "https://primecreator.loverose.club",
         #"animation_url":"",
