@@ -16,7 +16,7 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 
 /**
  * @title PrimeCreatorNFT
- * @notice LoveRose NFT collection with royalty support, access control, USDT/USDC minting, and recovery features.
+ * @notice ERC721A-based NFT contract with built-in royalty support, role-based access control, and token recovery features.
  */
 contract PrimeCreatorNFT is ERC721AQueryable, Ownable, AccessControl, ERC2981, ReentrancyGuard, Pausable {
     using SafeERC20 for IERC20;
@@ -40,7 +40,14 @@ contract PrimeCreatorNFT is ERC721AQueryable, Ownable, AccessControl, ERC2981, R
     event ERC20Withdrawn(address indexed token, address indexed to, uint256 amount); // Emitted when ERC20 tokens are withdrawn
     event BaseTokenURIUpdated(string newURI); // Emitted when base URI is updated
     event RoyaltyUpdated(address indexed receiver, uint96 fee); // Emitted when royalty info is updated
-    
+    event TokensMinted(address indexed operator, address indexed recipient, uint256 quantity); // Emitted when tokens are minted
+    event MaxMintPerTxnSet(uint256 newLimit); // Emitted when maxMintPerTxn is updated
+    event AdminGranted(address indexed targetAddress); // Emitted when a new admin address is granted
+    event AdminRevoked(address indexed targetAddress); // Emitted when an admin address is revoked
+    event MinterGranted(address indexed targetAddress); // Emitted when a minter role is granted
+    event MinterRevoked(address indexed targetAddress); // Emitted when a minter role is revoked
+    event ContractPaused(address account); // Emitted when contract paused
+    event ContractUnpaused(address account); // Emitted when contract unpaused
     /**
      * @notice Returns the starting token ID (overridden from ERC721A)
      * @return Starting token ID
@@ -80,6 +87,7 @@ contract PrimeCreatorNFT is ERC721AQueryable, Ownable, AccessControl, ERC2981, R
         require(quantity <= maxMintPerTxn, "PrimeCreatorNFT: Quantity must be smaller than maxMintPerTxn");
         require((totalSupply() + quantity) <= MAX_SUPPLY, "Quantity exceeds totalSupply");
         _safeMint(recipient, quantity);
+        emit TokensMinted(msg.sender, recipient, quantity);
     }
 
     /**
@@ -126,6 +134,7 @@ contract PrimeCreatorNFT is ERC721AQueryable, Ownable, AccessControl, ERC2981, R
      */
     function setMaxMintAmount(uint256 _newmaxMintPerTxn) external onlyRole(ADMIN_ROLE) {
         maxMintPerTxn = _newmaxMintPerTxn;
+        emit MaxMintPerTxnSet(maxMintPerTxn);
     }
 
     /**
@@ -187,6 +196,7 @@ contract PrimeCreatorNFT is ERC721AQueryable, Ownable, AccessControl, ERC2981, R
      */
     function grantAdmin(address account) external onlyOwner {
         _grantRole(ADMIN_ROLE, account);
+        emit AdminGranted(account);
     }
 
     /**
@@ -195,6 +205,7 @@ contract PrimeCreatorNFT is ERC721AQueryable, Ownable, AccessControl, ERC2981, R
      */
     function revokeAdmin(address account) external onlyOwner {
         _revokeRole(ADMIN_ROLE, account);
+        emit AdminRevoked(account);
     }
 
     /**
@@ -203,6 +214,7 @@ contract PrimeCreatorNFT is ERC721AQueryable, Ownable, AccessControl, ERC2981, R
      */
     function grantMinter(address account) external onlyOwner {
         _grantRole(MINTER_ROLE, account);
+        emit MinterGranted(account);
     }
 
     /**
@@ -211,6 +223,7 @@ contract PrimeCreatorNFT is ERC721AQueryable, Ownable, AccessControl, ERC2981, R
      */
     function revokeMinter(address account) external onlyOwner {
         _revokeRole(MINTER_ROLE, account);
+        emit MinterRevoked(account);
     }
 
     /**
@@ -218,6 +231,7 @@ contract PrimeCreatorNFT is ERC721AQueryable, Ownable, AccessControl, ERC2981, R
      */
     function pause() external onlyRole(ADMIN_ROLE) {
         _pause();
+        emit ContractPaused(msg.sender);
     }
 
     /**
@@ -225,6 +239,7 @@ contract PrimeCreatorNFT is ERC721AQueryable, Ownable, AccessControl, ERC2981, R
      */
     function unpause() external onlyRole(ADMIN_ROLE) {
         _unpause();
+        emit ContractUnpaused(msg.sender);
     }
 
     /**
