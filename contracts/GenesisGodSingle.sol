@@ -25,12 +25,12 @@ contract PrimeCreatorNFT is ERC721AQueryable, Ownable, AccessControl, ERC2981, R
     uint256 constant MAX_SUPPLY = 300; // Maximum number of NFTs that can be minted
     uint96 constant DEFAULT_ROYALTY = 500; // Default royalty fee (in basis points, 500 = 5%)
     uint256 constant MIN_TOKEN_ID = 1; // Token IDs start from 1
-    string constant TOKEN_SYMBOL = "LRPC"; // Token symbol
-    string constant TOKEN_NAME = "LoveRose Prime Creator"; // Token name
+    string constant TOKEN_SYMBOL = "LRGG"; // Token symbol
+    string constant TOKEN_NAME = "LoveRose Genesis God"; // Token name
     uint256 public maxMintPerTxn = 300; // Maximum NFTs allowed to mint per transaction
 
     bool public isLocked; // Indicates whether contract settings are locked
-    string public baseTokenURI = "ipfs://bafybeiev2hl5gj4srdxnqyxvkw4vllz5dykcvm2jkvoewqq62brpibxvzq/"; // Base URI for token metadata
+    string public baseTokenURI = "ipfs://bafybeigs4p4v6tc7u45itvaj7lfeyef5au4donigwkkjys2qjdjdywlipu/"; // Base URI for token metadata
 
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE"); // Role identifier for admin access
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE"); // Role identifier for minter access
