@@ -11,8 +11,8 @@ base_image_url = 'ipfs://bafybeia6eyrbvml536w67avwwkr2fjyeig3p52qqkb5uad3ac5uqmv
 # Generate metadata for token IDs from 1001 to 1300
 for token_id in range(1, 301):
     metadata = {
-        "name": f"LoveRose Prime Creator #{token_id:03}",
-        "description": "The Prime Creator NFT of the LoveRose Universe—an exclusive digital identity credential co-issued by LoveRose (TR - Tactile Remote Reality & Live Interaction) and InNow. This prestigious token grants holders supreme membership status and exclusive privileges within the LoveRose Universe.",
+        "name": f"LoveRose Genesis God #{token_id:03}",
+        "description": "The Genesis God of the LoveRose Universe—an exclusive digital identity credential co-issued by LoveRose (TR - Tactile Remote Reality & Live Interaction) and InNow. This prestigious token grants holders supreme membership status and exclusive privileges within the LoveRose Universe.",
         "image": f"{base_image_url}{token_id:03}.png",
         "external_url": "https://primecreator.loverose.club",
         #"animation_url":"",
