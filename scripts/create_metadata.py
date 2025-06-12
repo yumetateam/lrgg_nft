@@ -14,7 +14,7 @@ for token_id in range(1, 301):
         "name": f"LoveRose Genesis God #{token_id:03}",
         "description": "The Genesis God of the LoveRose Universe—an exclusive digital identity credential co-issued by LoveRose (TR - Tactile Remote Reality & Live Interaction) and InNow. This prestigious token grants holders supreme membership status and exclusive privileges within the LoveRose Universe.",
         "image": f"{base_image_url}{token_id:03}.png",
-        "external_url": "https://primecreator.loverose.club",
+        "external_url": "https://genesisgod.loverose.club/",
         #"animation_url":"",
         #"youtube_url":"",
         "background_color": "#000000",
